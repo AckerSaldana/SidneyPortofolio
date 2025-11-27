@@ -83,7 +83,7 @@ const Gallery = () => {
       ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: () => `+=${container.scrollWidth - window.innerWidth}`,
+        end: () => `+=${(container.scrollWidth - window.innerWidth) * 3}`,
         pin: true,
         animation: horizontalScroll,
         scrub: 1,
