@@ -113,7 +113,7 @@ const Hero = ({ startAnimation }) => {
             ))}
           </div>
           <div className="hero-line">
-            {"PORTFOLIO".split('').map((char, i) => (
+            {"KYLIE".split('').map((char, i) => (
               <span key={i} className="hero-char">{char}</span>
             ))}
           </div>
