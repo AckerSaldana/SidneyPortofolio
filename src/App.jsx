@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import './App.css';
+
 import CustomCursor from './components/CustomCursor';
 import Preloader from './components/Preloader';
 import Navigation from './components/Navigation';
@@ -33,13 +34,6 @@ function App() {
       touchMultiplier: 2,
     });
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
     // Integrate Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -49,9 +43,13 @@ function App() {
 
     gsap.ticker.lagSmoothing(0);
 
+    // Initial ScrollTrigger refresh after Lenis is ready
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
     };
   }, []);
 
@@ -62,10 +60,12 @@ function App() {
       {!preloaderComplete && <Preloader onComplete={() => setPreloaderComplete(true)} />}
       <Navigation />
       
-      <Hero />
-      <Philosophy />
-      <Gallery />
-      <Process />
+      <div className="content-wrapper">
+        <Hero startAnimation={preloaderComplete} />
+        <Philosophy />
+        <Gallery />
+        <Process />
+      </div>
       <Footer />
       
     </main>

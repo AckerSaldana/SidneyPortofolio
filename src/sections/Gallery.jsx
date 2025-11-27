@@ -7,17 +7,18 @@ import WebGLDistortion from '../components/WebGLDistortion';
 
 const ProjectCard = ({ project, index }) => {
   const [isHovering, setIsHovering] = useState(false);
+  const cardRef = useRef(null);
 
   return (
-    <div 
-      className="project-card" 
+    <div
+      ref={cardRef}
+      className="project-card"
       data-cursor-text="VIEW"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="project-image-container">
         <WebGLDistortion image={project.image} isHovering={isHovering} />
-        {/* Fallback image if WebGL fails or for SEO, hidden visually but present */}
         <img src={project.image} alt={project.title} className="project-image" style={{ opacity: 0 }} />
         <div className="project-overlay"></div>
       </div>
@@ -33,6 +34,7 @@ const ProjectCard = ({ project, index }) => {
 const Gallery = () => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
+  const progressRef = useRef(null);
 
   const projects = [
     {
@@ -64,19 +66,53 @@ const Gallery = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const container = containerRef.current;
-      const totalWidth = container.scrollWidth - window.innerWidth;
+      const section = sectionRef.current;
 
-      gsap.to(container, {
-        x: -totalWidth,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          pin: true,
-          scrub: 1,
-          end: () => "+=" + container.scrollWidth,
-          invalidateOnRefresh: true
+      // Calculate the scroll distance
+      const getScrollAmount = () => {
+        return -(container.scrollWidth - window.innerWidth);
+      };
+
+      // Horizontal scroll tween
+      const horizontalScroll = gsap.to(container, {
+        x: getScrollAmount,
+        ease: 'none',
+      });
+
+      // Create the ScrollTrigger
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${container.scrollWidth - window.innerWidth}`,
+        pin: true,
+        animation: horizontalScroll,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          if (progressRef.current) {
+            progressRef.current.style.transform = `scaleX(${self.progress})`;
+          }
         }
       });
+
+      // Card reveal animation
+      gsap.fromTo('.project-card',
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 60%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -86,6 +122,12 @@ const Gallery = () => {
     <section className="gallery" ref={sectionRef} id="projects">
       <div className="gallery-header">
         <h2>Selected Works</h2>
+        <div className="gallery-progress">
+          <div
+            className="gallery-progress-bar"
+            ref={progressRef}
+          />
+        </div>
       </div>
       <div className="gallery-container" ref={containerRef}>
         {projects.map((project, index) => (

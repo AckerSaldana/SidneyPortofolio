@@ -3,14 +3,52 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Process.css';
 
+const ProcessStep = ({ step }) => {
+  const stepRef = useRef(null);
+  const numberRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Number counter animation
+      const target = { val: 0 };
+      gsap.to(target, {
+        val: parseInt(step.number),
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: stepRef.current,
+          start: 'top 80%',
+        },
+        onUpdate: () => {
+          if (numberRef.current) {
+            numberRef.current.textContent = String(Math.floor(target.val)).padStart(2, '0');
+          }
+        }
+      });
+    }, stepRef);
+
+    return () => ctx.revert();
+  }, [step.number]);
+
+  return (
+    <div ref={stepRef} className="process-step">
+      <div ref={numberRef} className="process-step-number">00</div>
+      <div className="process-step-content">
+        <h3>{step.title}</h3>
+        <p>{step.description}</p>
+      </div>
+    </div>
+  );
+};
+
 const Process = () => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const steps = gsap.utils.toArray('.process-step');
-      
-      steps.forEach((step, i) => {
+
+      steps.forEach((step) => {
         gsap.fromTo(step,
           { opacity: 0, y: 50 },
           {
@@ -27,7 +65,7 @@ const Process = () => {
         );
       });
 
-      // Line animation
+      // Line animation with glow
       gsap.fromTo('.process-line-progress',
         { height: '0%' },
         {
@@ -70,20 +108,14 @@ const Process = () => {
       <div className="process-header">
         <h2>The Process</h2>
       </div>
-      
+
       <div className="process-timeline">
         <div className="process-line">
           <div className="process-line-progress"></div>
         </div>
-        
+
         {steps.map((step, index) => (
-          <div key={index} className="process-step">
-            <div className="process-step-number">{step.number}</div>
-            <div className="process-step-content">
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-            </div>
-          </div>
+          <ProcessStep key={index} step={step} index={index} />
         ))}
       </div>
     </section>

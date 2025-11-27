@@ -108,6 +108,12 @@
   font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 2px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
 }
 
 .scroll-mouse {

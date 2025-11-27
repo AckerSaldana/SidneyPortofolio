@@ -1,41 +1,61 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Footer.css';
 
 const Footer = () => {
   const footerRef = useRef(null);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Reveal animation
-      gsap.fromTo('.footer-content',
-        { y: 100, opacity: 0 },
+      // CTA text animation on scroll
+      gsap.fromTo('.cta-line',
+        { yPercent: 100, opacity: 0 },
         {
-          y: 0,
+          yPercent: 0,
           opacity: 1,
-          duration: 1,
+          stagger: 0.1,
+          duration: 1.2,
+          ease: 'power4.out',
           scrollTrigger: {
             trigger: footerRef.current,
             start: 'top 80%',
+            toggleActions: 'play none none none'
           }
         }
       );
 
-      // Counter animation for awards
-      const awards = document.querySelectorAll('.award-count');
-      awards.forEach(award => {
-        const count = parseInt(award.getAttribute('data-count'));
-        gsap.to(award, {
-          innerText: count,
-          duration: 2,
-          snap: { innerText: 1 },
+      // Info columns fade in
+      gsap.fromTo('.footer-column',
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: 'power2.out',
           scrollTrigger: {
-            trigger: award,
-            start: 'top 90%',
+            trigger: '.footer-info',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
           }
-        });
-      });
+        }
+      );
+
+      // Bottom bar slide in
+      gsap.fromTo('.footer-bottom',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.footer-bottom',
+            start: 'top 95%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
 
     }, footerRef);
 
@@ -44,46 +64,59 @@ const Footer = () => {
 
   return (
     <footer className="footer" ref={footerRef} id="contact">
-      <div className="footer-content">
-        <div className="footer-top">
-          <div className="footer-credentials">
-            <h3>Credentials</h3>
-            <ul>
-              <li>M.Arch, Harvard GSD</li>
-              <li>AIA Member</li>
-              <li>LEED AP BD+C</li>
-            </ul>
+      {/* Large CTA Section */}
+      <div className="footer-cta" ref={ctaRef}>
+        <a href="mailto:hello@sidney.arch" className="cta-text">
+          <div className="cta-line-wrapper">
+            <span className="cta-line">Let's create</span>
           </div>
-          <div className="footer-awards">
-            <h3>Recognition</h3>
-            <div className="award-item">
-              <span className="award-count" data-count="12">0</span>
-              <span>International Awards</span>
-            </div>
-            <div className="award-item">
-              <span className="award-count" data-count="24">0</span>
-              <span>Publications</span>
-            </div>
+          <div className="cta-line-wrapper">
+            <span className="cta-line">something</span>
           </div>
+          <div className="cta-line-wrapper">
+            <span className="cta-line cta-accent">extraordinary</span>
+          </div>
+        </a>
+        <div className="cta-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+            <path d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Info Grid */}
+      <div className="footer-info">
+        <div className="footer-column">
+          <span className="column-label">Location</span>
+          <p>Mexico City</p>
+          <p>Copenhagen</p>
         </div>
 
-        <div className="footer-main">
-          <h2>Let's Build<br />The Future</h2>
-          <a href="mailto:hello@sidney.arch" className="footer-cta" data-cursor-text="EMAIL">
-            hello@sidney.arch
-          </a>
+        <div className="footer-column">
+          <span className="column-label">Contact</span>
+          <a href="mailto:hello@sidney.arch">hello@sidney.arch</a>
+          <p>+52 55 1234 5678</p>
         </div>
 
-        <div className="footer-bottom">
-          <div className="social-links">
-            <a href="#" data-cursor-text="FOLLOW">Instagram</a>
-            <a href="#" data-cursor-text="CONNECT">LinkedIn</a>
-            <a href="#" data-cursor-text="VIEW">Behance</a>
-          </div>
-          <div className="copyright">
-            &copy; {new Date().getFullYear()} Sidney Architect. All rights reserved.
-          </div>
+        <div className="footer-column">
+          <span className="column-label">Social</span>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Behance</a>
         </div>
+
+        <div className="footer-column">
+          <span className="column-label">Navigation</span>
+          <a href="#philosophy">Philosophy</a>
+          <a href="#projects">Projects</a>
+          <a href="#process">Process</a>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="footer-bottom">
+        <span className="copyright">&copy; {new Date().getFullYear()} Sidney Architecture</span>
+        <span className="tagline">Designing the future, one space at a time</span>
       </div>
     </footer>
   );

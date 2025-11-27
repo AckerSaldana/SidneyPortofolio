@@ -40,6 +40,21 @@
   font-size: 5vw;
   line-height: 1.2;
   color: var(--text-color);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3em; /* Space between words */
+}
+
+.word-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.word {
+  display: inline-block;
+  transform-origin: bottom left;
 }
 
 .philosophy-text p {

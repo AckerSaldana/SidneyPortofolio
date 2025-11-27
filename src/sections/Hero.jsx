@@ -1,25 +1,17 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import SplitType from 'splitting'; // We'll simulate Splitting or use a manual approach if package issues arise
-import 'splitting/dist/splitting.css';
-import 'splitting/dist/splitting-cells.css';
 import './Hero.css';
 
-const Hero = () => {
+const Hero = ({ startAnimation }) => {
   const heroRef = useRef(null);
-  const titleRef = useRef(null);
   const subtitleRef = useRef(null);
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Simulate Splitting.js by wrapping characters (or use the library if it works out of the box)
-    // For now, we'll assume the library is working or we'd use a utility. 
-    // Since we installed 'splitting', we can try to use it.
-    // However, in React, it's often better to do this manually or use a wrapper to avoid DOM manipulation conflicts.
-    // Let's do a simple manual split for the title to be safe and "React-way".
-    
+    if (!startAnimation) return;
+
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 3.5 }); // Wait for preloader + nav
+      const tl = gsap.timeline();
 
       // Video reveal
       tl.fromTo(videoRef.current, 
@@ -55,11 +47,46 @@ const Hero = () => {
 
     }, heroRef);
 
-    return () => ctx.revert();
-  }, []);
+    // Parallax effect on mouse move
+    const handleMouseMove = (e) => {
+      const { clientX, clientY } = e;
+      const xPos = (clientX / window.innerWidth - 0.5) * 2;
+      const yPos = (clientY / window.innerHeight - 0.5) * 2;
+
+      // Title layer - moves more
+      gsap.to('.hero-line:first-child', {
+        x: xPos * 15,
+        y: yPos * 10,
+        duration: 1,
+        ease: 'power2.out'
+      });
+
+      // Second line - moves slightly less for depth
+      gsap.to('.hero-line:last-child', {
+        x: xPos * 10,
+        y: yPos * 7,
+        duration: 1,
+        ease: 'power2.out'
+      });
+
+      // Subtitle - subtle movement
+      gsap.to(subtitleRef.current, {
+        x: xPos * 5,
+        y: yPos * 3,
+        duration: 1,
+        ease: 'power2.out'
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [startAnimation]);
 
   const title = "SIDNEY";
-  const lastName = "ARCHITECT"; // Or whatever the name is. User said "Her name and title". Let's use a placeholder name.
 
   return (
     <section className="hero" ref={heroRef}>
@@ -79,7 +106,7 @@ const Hero = () => {
       </div>
 
       <div className="hero-content">
-        <h1 className="hero-title" ref={titleRef}>
+        <h1 className="hero-title">
           <div className="hero-line">
             {title.split('').map((char, i) => (
               <span key={i} className="hero-char">{char}</span>

@@ -1,0 +1,13 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  background-color: var(--bg-color);
+  width: 100%;
+  min-height: 100vh;
+}

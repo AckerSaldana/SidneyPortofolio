@@ -9,31 +9,28 @@ const Philosophy = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const texts = gsap.utils.toArray('.philosophy-text p');
+      // Animate words
+      const words = gsap.utils.toArray('.word');
       
-      texts.forEach((text, i) => {
-        gsap.fromTo(text, 
-          { 
-            opacity: 0, 
-            y: 50,
-            filter: 'blur(10px)'
-          },
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 1.5,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: text,
-              start: 'top 80%',
-              end: 'top 50%',
-              scrub: 1,
-              toggleActions: 'play none none reverse'
-            }
+      gsap.fromTo(words, 
+        { 
+          y: 100,
+          opacity: 0
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.02,
+          scrollTrigger: {
+            trigger: '.philosophy-content',
+            start: 'top 70%',
+            end: 'bottom 80%',
+            toggleActions: 'play none none reverse'
           }
-        );
-      });
+        }
+      );
 
       // Parallax effect for the background text
       gsap.to('.philosophy-bg-text', {
@@ -57,19 +54,26 @@ const Philosophy = () => {
       <div className="philosophy-bg-text">VISION</div>
       <div className="philosophy-content" ref={textRef}>
         <div className="philosophy-text">
-          <p>"Space is not just built.</p>
-          <p>It's <span className="highlight">felt</span>."</p>
+          <p>
+            {"Space is not just built.".split(' ').map((word, i) => (
+              <span key={i} className="word-wrapper"><span className="word">{word}&nbsp;</span></span>
+            ))}
+          </p>
+          <p>
+            <span className="word-wrapper"><span className="word">It's&nbsp;</span></span>
+            <span className="word-wrapper"><span className="word highlight">felt.</span></span>
+          </p>
         </div>
         <div className="philosophy-description">
           <p>
-            Architecture is the silent language of space. It speaks through light, 
-            material, and void. My work explores the intersection of human emotion 
-            and structural integrity, creating environments that breathe and evolve 
-            with their inhabitants.
+            {"Architecture is the silent language of space. It speaks through light, material, and void. My work explores the intersection of human emotion and structural integrity, creating environments that breathe and evolve with their inhabitants.".split(' ').map((word, i) => (
+               <span key={i} className="word-wrapper"><span className="word">{word}&nbsp;</span></span>
+            ))}
           </p>
           <p>
-            Every line drawn is a deliberate choice to frame a moment, to capture 
-            a feeling, to build a memory.
+             {"Every line drawn is a deliberate choice to frame a moment, to capture a feeling, to build a memory.".split(' ').map((word, i) => (
+               <span key={i} className="word-wrapper"><span className="word">{word}&nbsp;</span></span>
+            ))}
           </p>
         </div>
       </div>

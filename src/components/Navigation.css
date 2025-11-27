@@ -10,6 +10,12 @@
   z-index: 100;
   mix-blend-mode: difference;
   color: var(--text-color);
+  transition: padding 0.4s var(--easing), backdrop-filter 0.4s var(--easing);
+}
+
+.navigation.scrolled {
+  padding: 20px 60px;
+  backdrop-filter: blur(10px);
 }
 
 .nav-logo a {
@@ -18,6 +24,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
+  display: inline-block;
 }
 
 .nav-links {
@@ -32,6 +39,7 @@
   letter-spacing: 1px;
   position: relative;
   overflow: hidden;
+  display: inline-block;
 }
 
 .nav-link::after {
