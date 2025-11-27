@@ -5,9 +5,18 @@ import './Gallery.css';
 
 import WebGLDistortion from '../components/WebGLDistortion';
 
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index, onProjectClick }) => {
   const [isHovering, setIsHovering] = useState(false);
   const cardRef = useRef(null);
+
+  const handleClick = () => {
+    if (onProjectClick && cardRef.current) {
+      const container = cardRef.current.querySelector('.project-image-container');
+      const rect = container.getBoundingClientRect();
+      // Pass the image URL, the bounding rect, and the index (as ID)
+      onProjectClick(project.image, rect, index + 1);
+    }
+  };
 
   return (
     <div
@@ -16,6 +25,7 @@ const ProjectCard = ({ project, index }) => {
       data-cursor-text="VIEW"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      onClick={handleClick}
     >
       <div className="project-image-container">
         <WebGLDistortion image={project.image} isHovering={isHovering} />
@@ -31,7 +41,7 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-const Gallery = () => {
+const Gallery = ({ onProjectClick }) => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const progressRef = useRef(null);
@@ -131,7 +141,12 @@ const Gallery = () => {
       </div>
       <div className="gallery-container" ref={containerRef}>
         {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} index={index} />
+          <ProjectCard 
+            key={index} 
+            project={project} 
+            index={index} 
+            onProjectClick={onProjectClick}
+          />
         ))}
       </div>
     </section>

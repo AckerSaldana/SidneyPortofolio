@@ -11,3 +11,14 @@
   width: 100%;
   min-height: 100vh;
 }
+
+/* Transition Overlay for Project Navigation */
+.transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform, width, height, top, left;
+}
