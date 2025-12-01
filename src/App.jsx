@@ -21,7 +21,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [preloaderComplete, setPreloaderComplete] = useState(false);
-  const [transitionData, setTransitionData] = useState({ active: false, image: null, rect: null, id: null });
+  const [transitionData, setTransitionData] = useState({ active: false, image: null, title: null, id: null });
   const transitionRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,16 +72,17 @@ function App() {
 
   // Animate transition after image is rendered
   useLayoutEffect(() => {
-    if (transitionData.active && transitionRef.current && transitionData.rect) {
+    if (transitionData.active && transitionRef.current && transitionData.image) {
       const overlay = transitionRef.current;
-      const { rect, id } = transitionData;
+      const titleOverlay = document.querySelector('.transition-title');
+      const { image, title, id } = transitionData;
 
       // Set initial position matching the clicked card
       gsap.set(overlay, {
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
+        top: image.rect.top,
+        left: image.rect.left,
+        width: image.rect.width,
+        height: image.rect.height,
         opacity: 1,
         objectFit: 'cover',
         zIndex: 9999
@@ -89,42 +90,52 @@ function App() {
 
       const tl = gsap.timeline({
         onComplete: () => {
-          navigate(`/project/${id}`);
-          // Fade out overlay after navigation
-          gsap.to(overlay, {
+          navigate(`/project/${id}`, { state: { transition: true } });
+          // Fade out overlays after navigation
+          gsap.to([overlay, titleOverlay], {
             opacity: 0,
-            duration: 0.8,
-            ease: 'power2.inOut',
+            duration: 0.5,
             onComplete: () => {
-              setTransitionData({ active: false, image: null, rect: null, id: null });
+              setTransitionData({ active: false, image: null, title: null, id: null });
             }
           });
         }
       });
 
-      // 1. Slight "lift" effect
-      tl.to(overlay, {
-        scale: 1.05,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-
-      // 2. Expand to full screen with dramatic easing
+      // 1. Image Animation
       tl.to(overlay, {
         top: 0,
         left: 0,
         width: '100vw',
         height: '100vh',
-        scale: 1, // Reset scale
         duration: 1.2,
-        ease: 'expo.inOut' // More dramatic ease
-      }, '-=0.1');
+        ease: 'expo.inOut'
+      });
+
+      // 2. Title Animation (Fly to center)
+      if (titleOverlay) {
+        // Calculate center position (approximate for Hero title)
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        // Target font size should match Hero title size (8vw approx)
+        const targetFontSize = windowWidth * 0.08; 
+        
+        tl.to(titleOverlay, {
+          top: windowHeight / 2 - targetFontSize / 2, // Center vertically
+          left: '50%',
+          xPercent: -50, // Center horizontally
+          fontSize: targetFontSize,
+          duration: 1.2,
+          ease: 'expo.inOut'
+        }, 0); // Sync with image
+      }
 
     }
   }, [transitionData.active]);
 
-  const handleProjectClick = (image, rect, id) => {
-    setTransitionData({ active: true, image, rect, id });
+  const handleProjectClick = (imageData, titleData, id) => {
+    setTransitionData({ active: true, image: imageData, title: titleData, id });
   };
 
   return (
@@ -136,13 +147,36 @@ function App() {
       
       {/* Transition Overlay Image */}
       {transitionData.active && (
-        <img 
-          ref={transitionRef}
-          src={transitionData.image} 
-          alt="Transition" 
-          className="transition-overlay"
-          style={{ pointerEvents: 'none' }}
-        />
+        <>
+          <img 
+            ref={transitionRef}
+            src={transitionData.image.image} 
+            alt="Transition" 
+            className="transition-overlay"
+            style={{ pointerEvents: 'none' }}
+          />
+          {transitionData.title && (
+            <h1 
+              className="transition-title"
+              style={{
+                position: 'fixed',
+                top: transitionData.title.rect.top,
+                left: transitionData.title.rect.left,
+                fontSize: '3rem', // Match card size initially
+                fontFamily: 'var(--font-display)',
+                color: '#fff',
+                zIndex: 10000,
+                margin: 0,
+                lineHeight: 1,
+                pointerEvents: 'none',
+                textTransform: 'uppercase',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {transitionData.title.text}
+            </h1>
+          )}
+        </>
       )}
 
       <Routes>

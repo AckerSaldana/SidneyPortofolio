@@ -1,29 +1,35 @@
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import './ProjectPage.css';
 
 const ProjectPage = () => {
   const { id } = useParams();
+  const location = useLocation();
   const containerRef = useRef(null);
+  const hasTransition = location.state?.transition;
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.8 }); // Wait for FLIP transition
+      const tl = gsap.timeline({ delay: hasTransition ? 0 : 0.8 });
 
-      // Hero Title Reveal
-      tl.fromTo('.project-hero-title',
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.5, ease: 'power4.out' }
-      );
+      // Hero Title Reveal - Skip if transition happened
+      if (!hasTransition) {
+        tl.fromTo('.project-hero-title',
+          { y: 100, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.5, ease: 'power4.out' }
+        );
+      } else {
+        gsap.set('.project-hero-title', { opacity: 1, y: 0 });
+      }
 
       // Info Sidebar Reveal
       tl.fromTo('.project-info-sidebar',
         { x: -50, opacity: 0 },
         { x: 0, opacity: 1, duration: 1, ease: 'power2.out' },
-        '-=1'
+        hasTransition ? 0.5 : '-=1' // Adjust timing based on transition
       );
 
       // Main Content Reveal
@@ -36,7 +42,7 @@ const ProjectPage = () => {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [hasTransition]);
 
   return (
     <div className="content-wrapper project-page" ref={containerRef}>

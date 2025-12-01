@@ -12,9 +12,16 @@ const ProjectCard = ({ project, index, onProjectClick }) => {
   const handleClick = () => {
     if (onProjectClick && cardRef.current) {
       const container = cardRef.current.querySelector('.project-image-container');
+      const titleEl = cardRef.current.querySelector('.project-title');
       const rect = container.getBoundingClientRect();
-      // Pass the image URL, the bounding rect, and the index (as ID)
-      onProjectClick(project.image, rect, index + 1);
+      const titleRect = titleEl.getBoundingClientRect();
+      
+      // Pass image data AND title data
+      onProjectClick(
+        { image: project.image, rect }, 
+        { text: project.title, rect: titleRect },
+        index + 1
+      );
     }
   };
 
