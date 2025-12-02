@@ -20,7 +20,7 @@ const ProjectCard = ({ project, index, onProjectClick }) => {
       onProjectClick(
         { image: project.image, rect }, 
         { text: project.title, rect: titleRect },
-        index + 1
+        project.id
       );
     }
   };
@@ -48,37 +48,12 @@ const ProjectCard = ({ project, index, onProjectClick }) => {
   );
 };
 
+import { projects } from '../data/projects';
+
 const Gallery = ({ onProjectClick }) => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const progressRef = useRef(null);
-
-  const projects = [
-    {
-      title: "The Void House",
-      location: "Kyoto, Japan",
-      year: "2023",
-      image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&auto=format&fit=crop"
-    },
-    {
-      title: "Azure Museum",
-      location: "Oslo, Norway",
-      year: "2022",
-      image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop"
-    },
-    {
-      title: "Brutalist Retreat",
-      location: "Swiss Alps",
-      year: "2024",
-      image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&auto=format&fit=crop"
-    },
-    {
-      title: "Urban Canopy",
-      location: "Singapore",
-      year: "2023",
-      image: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?w=800&auto=format&fit=crop"
-    }
-  ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {

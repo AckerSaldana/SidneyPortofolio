@@ -9,6 +9,7 @@ import CustomCursor from './components/CustomCursor';
 import Preloader from './components/Preloader';
 import Navigation from './components/Navigation';
 import GrainOverlay from './components/GrainOverlay';
+import GoldenCurves from './components/GoldenCurves';
 import useMousePosition from './hooks/useMousePosition';
 import Footer from './sections/Footer';
 
@@ -27,6 +28,7 @@ function App() {
     setPreloaderComplete(true);
   }, []);
   const transitionRef = useRef(null);
+  const lenisRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -57,6 +59,9 @@ function App() {
     });
     gsap.ticker.lagSmoothing(0);
 
+    // Store lenis instance in ref
+    lenisRef.current = lenis;
+
     // Initial ScrollTrigger refresh
     setTimeout(() => {
       ScrollTrigger.refresh();
@@ -70,9 +75,13 @@ function App() {
 
   // Scroll to top on route change
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
     ScrollTrigger.refresh();
-  }, [location.pathname]);
+  }, [location.key]);
 
   // Animate transition after image is rendered
   useLayoutEffect(() => {
@@ -144,6 +153,7 @@ function App() {
 
   return (
     <main className="app">
+      <GoldenCurves />
       <GrainOverlay />
       <CustomCursor />
       {!preloaderComplete && <Preloader onComplete={handlePreloaderComplete} />}

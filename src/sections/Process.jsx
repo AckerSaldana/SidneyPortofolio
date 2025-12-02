@@ -49,20 +49,20 @@ const Process = () => {
 
   const steps = [
     {
-      title: 'CONCEPT',
-      description: 'The genesis of form. We begin with the site, the light, and the human need. Sketches emerge from the subconscious, capturing the essence of the space before it exists.'
+      title: 'ANALYSIS',
+      description: 'Understanding the ecosystem. We study climate patterns, solar orientation, and natural resources. Every project begins with deep respect for the land and its existing rhythms.'
     },
     {
-      title: 'DESIGN',
-      description: 'Refining the vision. Rigorous iteration transforms abstract ideas into tangible structures. Every material is chosen for its tactile quality and aging potential.'
+      title: 'BIOCLIMATIC',
+      description: 'Designing with nature. Passive strategies guide our approach—natural ventilation, thermal mass, and daylighting reduce energy dependency while maximizing human comfort.'
     },
     {
-      title: 'REALITY',
-      description: 'The build. Precision meets craft. We oversee every detail, ensuring the physical manifestation honors the initial spark of inspiration.'
+      title: 'MATERIALS',
+      description: 'Conscious selection. We prioritize locally-sourced, recycled, and low-carbon materials. Each choice considers embodied energy, durability, and end-of-life recyclability.'
     },
     {
-      title: 'LIVING',
-      description: 'The space comes alive. We monitor how light interacts with the surfaces throughout the seasons, ensuring the architecture evolves with its inhabitants.'
+      title: 'REGENERATION',
+      description: 'Beyond sustainability. Our buildings give back—harvesting rainwater, generating clean energy, and creating habitats. Architecture that heals rather than depletes.'
     }
   ];
 
