@@ -170,18 +170,19 @@ function App() {
             style={{ pointerEvents: 'none' }}
           />
           {transitionData.title && (
-            <h1 
+            <h1
               className="transition-title"
               style={{
                 position: 'fixed',
                 top: transitionData.title.rect.top,
                 left: transitionData.title.rect.left,
-                fontSize: '3rem', // Match card size initially
+                fontSize: '2.5rem',
                 fontFamily: 'var(--font-display)',
                 color: '#fff',
                 zIndex: 10000,
                 margin: 0,
                 lineHeight: 1,
+                letterSpacing: '-0.02em',
                 pointerEvents: 'none',
                 textTransform: 'uppercase',
                 whiteSpace: 'nowrap'
@@ -197,8 +198,8 @@ function App() {
         <Route path="/" element={<Home preloaderComplete={preloaderComplete} onProjectClick={handleProjectClick} />} />
         <Route path="/project/:id" element={<ProjectPage />} />
       </Routes>
-      
-      <Footer />
+
+      {!location.pathname.startsWith('/project') && <Footer />}
     </main>
   );
 }
