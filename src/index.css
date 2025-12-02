@@ -4,8 +4,8 @@
   --accent-color: #c2b280; /* Muted gold */
   --accent-secondary: #e07a5f; /* Terracotta */
 
-  --font-display: "Playfair Display", serif;
-  --font-body: "DM Sans", sans-serif;
+  --font-display: "komet", sans-serif;
+  --font-body: "komet", sans-serif;
 
   --easing: cubic-bezier(0.65, 0, 0.35, 1);
 }

@@ -29,6 +29,17 @@ const MagneticLink = ({ href, className, children, cursorText }) => {
     });
   };
 
+  const handleClick = (e) => {
+    if (href.startsWith('#') || href.includes('#')) {
+      e.preventDefault();
+      const targetId = href.includes('#') ? href.split('#')[1] : href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <a
       ref={linkRef}
@@ -37,6 +48,7 @@ const MagneticLink = ({ href, className, children, cursorText }) => {
       data-cursor-text={cursorText}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       {children}
     </a>

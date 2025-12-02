@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Lenis from 'lenis';
 import gsap from 'gsap';
@@ -22,6 +22,10 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const [preloaderComplete, setPreloaderComplete] = useState(false);
   const [transitionData, setTransitionData] = useState({ active: false, image: null, title: null, id: null });
+
+  const handlePreloaderComplete = useCallback(() => {
+    setPreloaderComplete(true);
+  }, []);
   const transitionRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -142,7 +146,7 @@ function App() {
     <main className="app">
       <GrainOverlay />
       <CustomCursor />
-      {!preloaderComplete && <Preloader onComplete={() => setPreloaderComplete(true)} />}
+      {!preloaderComplete && <Preloader onComplete={handlePreloaderComplete} />}
       <Navigation />
       
       {/* Transition Overlay Image */}

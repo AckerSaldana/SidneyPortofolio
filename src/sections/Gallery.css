@@ -12,8 +12,8 @@
 
 .gallery-header {
   position: absolute;
-  top: 40px;
-  left: 60px;
+  top: clamp(100px, 14vw, 140px);
+  left: clamp(20px, 5vw, 60px);
   z-index: 10;
 }
 
@@ -42,22 +42,22 @@
 
 .gallery-container {
   display: flex;
-  padding-left: 60px;
-  padding-right: 100px; /* Extra space at end */
-  gap: 80px;
+  padding-left: clamp(20px, 5vw, 60px);
+  padding-right: clamp(40px, 8vw, 100px);
+  gap: clamp(30px, 6vw, 80px);
   width: max-content;
-  height: 70%;
+  height: min(70%, 600px);
   align-items: center;
   will-change: transform;
 }
 
 .project-card {
   position: relative;
-  width: 600px;
+  width: min(85vw, 600px);
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(15px, 2vw, 20px);
   flex-shrink: 0;
   cursor: none; /* Custom cursor handles this */
 }
@@ -113,17 +113,61 @@
   opacity: 0.6;
 }
 
-@media (max-width: 768px) {
-  .gallery-container {
-    padding-left: 20px;
-    gap: 40px;
+/* Large screens - wider cards for better aspect ratio */
+@media (min-width: 1440px) {
+  .project-card {
+    width: min(50vw, 800px);
   }
-  
+}
+
+@media (min-width: 2000px) {
+  .project-card {
+    width: min(40vw, 900px);
+  }
+
+  .gallery-container {
+    gap: 100px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .gallery {
+    padding-top: 80px;
+  }
+
+  .gallery-header {
+    top: 90px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .gallery {
+    padding-top: 60px;
+  }
+
+  .project-card {
+    width: min(75vw, 500px);
+  }
+
+  .gallery-header {
+    top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery {
+    padding-top: 40px;
+  }
+
+  .gallery-header {
+    top: 70px;
+  }
+
   .project-card {
     width: 85vw;
   }
-  
-  .gallery-header {
-    left: 20px;
+
+  .project-title {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
   }
 }

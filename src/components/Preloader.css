@@ -13,30 +13,84 @@
 }
 
 .preloader-content {
-  width: 300px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.preloader-counter {
-  font-family: var(--font-display);
-  font-size: 4rem;
-  color: var(--text-color);
+.preloader-brand {
+  display: flex;
+  gap: 0.1em;
+  overflow: hidden;
   margin-bottom: 20px;
 }
 
-.preloader-line-container {
-  width: 100%;
-  height: 2px;
+.char-wrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.char {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 900;
+  color: var(--text-color);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.preloader-footer {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.preloader-counter {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-color);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  will-change: transform, opacity;
+}
+
+.preloader-progress-track {
+  width: 200px;
+  height: 1px;
   background-color: rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
 }
 
-.preloader-line {
+.preloader-progress-bar {
+  width: 100%;
   height: 100%;
   background-color: var(--text-color);
-  width: 0%;
-  transition: width 0.1s ease-out;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@media (max-width: 768px) {
+  .preloader-footer {
+    bottom: 30px;
+    right: 20px;
+    left: 20px;
+    align-items: center;
+  }
+
+  .preloader-progress-track {
+    width: 100%;
+  }
 }

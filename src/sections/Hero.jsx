@@ -6,46 +6,51 @@ const Hero = ({ startAnimation }) => {
   const heroRef = useRef(null);
   const subtitleRef = useRef(null);
   const videoRef = useRef(null);
+  const hasAnimatedRef = useRef(false);
+  const tlRef = useRef(null);
 
   useEffect(() => {
-    if (!startAnimation) return;
+    if (!startAnimation || hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline();
+    // Kill any existing timeline
+    if (tlRef.current) {
+      tlRef.current.kill();
+    }
 
-      // Video reveal
-      tl.fromTo(videoRef.current, 
-        { scale: 1.2, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 2, ease: 'power2.out' }
-      );
+    tlRef.current = gsap.timeline();
 
-      // Text reveal
-      tl.fromTo('.hero-char', 
-        { y: 100, opacity: 0, rotateX: -90 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          rotateX: 0, 
-          stagger: 0.05, 
-          duration: 1.2, 
-          ease: 'power4.out' 
-        },
-        '-=1.5'
-      );
+    // Video reveal
+    tlRef.current.fromTo(videoRef.current,
+      { scale: 1.2, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 2, ease: 'power2.out' }
+    );
 
-      tl.fromTo(subtitleRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power2.out' },
-        '-=0.8'
-      );
+    // Text reveal
+    tlRef.current.fromTo('.hero-char',
+      { y: 100, opacity: 0, rotateX: -90 },
+      {
+        y: 0,
+        opacity: 1,
+        rotateX: 0,
+        stagger: 0.05,
+        duration: 1.2,
+        ease: 'power4.out'
+      },
+      '-=1.5'
+    );
 
-      tl.fromTo('.scroll-indicator',
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-        '-=0.5'
-      );
+    tlRef.current.fromTo(subtitleRef.current,
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: 'power2.out' },
+      '-=0.8'
+    );
 
-    }, heroRef);
+    tlRef.current.fromTo('.scroll-indicator',
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+      '-=0.5'
+    );
 
     // Parallax effect on mouse move
     const handleMouseMove = (e) => {
@@ -81,8 +86,8 @@ const Hero = ({ startAnimation }) => {
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      ctx.revert();
       window.removeEventListener('mousemove', handleMouseMove);
+      // Don't revert or kill timeline - animation should persist
     };
   }, [startAnimation]);
 
